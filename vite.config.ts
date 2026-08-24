@@ -3,5 +3,5 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/discord-time-app/',
+  base: '/DS-Time/',
 })
