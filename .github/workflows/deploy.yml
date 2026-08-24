@@ -36,13 +36,6 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Debug build output
-        run: |
-          echo "=== DIST ==="
-          find dist -maxdepth 3 -type f -print
-          echo "=== ASSETS ==="
-          ls -lah dist/assets  
-
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
