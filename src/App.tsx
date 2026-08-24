@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from 'react'
 import './App.css'
 
 /* ============================================================
-   DISCORD TIME
+   DS-TIME
    App.tsx
 
    ÍNDICE
@@ -10,26 +10,13 @@ import './App.css'
    01. Tipos
    02. Locales
    03. Traducciones
-   04. Configuración de formatos Discord
+   04. Formatos de timestamp
    05. Utilidades de idioma
    06. Utilidades de fecha y hora
    07. Preview de timestamps
-   08. Preview del mensaje Discord
-   09. Componente principal App
-      09.1 Estado
-      09.2 Datos derivados
-      09.3 Cambio de idioma
-      09.4 Acciones rápidas de tiempo
-      09.5 Copiar timestamps
-      09.6 Message Builder
+   08. Preview del mensaje
+   09. Componente principal
    10. JSX
-      10.1 Navbar
-      10.2 Hero
-      10.3 Paso 01
-      10.4 Paso 02
-      10.5 Paso 03
-      10.6 Paso 04
-      10.7 Footer
    ============================================================ */
 
 
@@ -37,15 +24,6 @@ import './App.css'
    01. TIPOS
    ============================================================ */
 
-/*
- * Idiomas soportados por la interfaz.
- *
- * Si en el futuro agregás otro idioma:
- * 1. añadilo acá;
- * 2. agregalo a localeMap;
- * 3. agregá sus traducciones;
- * 4. agregá la opción en el <select>.
- */
 type Language =
   | 'en'
   | 'es'
@@ -53,12 +31,6 @@ type Language =
   | 'de'
   | 'ja'
 
-/*
- * Formatos oficiales de timestamps de Discord.
- *
- * Ejemplo:
- * <t:1234567890:F>
- */
 type TimestampCode =
   | 't'
   | 'T'
@@ -68,15 +40,8 @@ type TimestampCode =
   | 'F'
   | 'R'
 
-/*
- * Estructura que debe tener cada idioma.
- *
- * TypeScript usa esto para avisarnos si olvidamos
- * traducir algún texto nuevo.
- */
 type Translation = {
   languageName: string
-
   localTimeForEveryone: string
 
   heroEyebrow: string
@@ -125,9 +90,6 @@ type Translation = {
   invalidDate: string
 }
 
-/*
- * Información visual de cada formato Discord.
- */
 type TimestampFormat = {
   code: TimestampCode
 
@@ -145,15 +107,9 @@ type TimestampFormat = {
 
 /* ============================================================
    02. LOCALES
+   Controlan cómo se muestran fechas y horas en cada idioma.
    ============================================================ */
 
-/*
- * Locale usado por Intl.DateTimeFormat e
- * Intl.RelativeTimeFormat.
- *
- * Esto controla cómo se muestran fechas,
- * horas, meses y tiempo relativo.
- */
 const localeMap: Record<
   Language,
   string
@@ -168,18 +124,14 @@ const localeMap: Record<
 
 /* ============================================================
    03. TRADUCCIONES
+   Todos los textos visibles de la aplicación.
    ============================================================ */
 
-/*
- * Todos los textos visibles de la aplicación.
- *
- * Si querés cambiar una frase de la UI,
- * casi siempre la vas a encontrar acá.
- */
 const translations: Record<
   Language,
   Translation
 > = {
+
   /* ----------------------------------------------------------
      ENGLISH
      ---------------------------------------------------------- */
@@ -286,6 +238,7 @@ const translations: Record<
     invalidDate:
       'Invalid date',
   },
+
 
   /* ----------------------------------------------------------
      ESPAÑOL
@@ -395,6 +348,7 @@ const translations: Record<
       'Fecha inválida',
   },
 
+
   /* ----------------------------------------------------------
      FRANÇAIS
      ---------------------------------------------------------- */
@@ -503,6 +457,7 @@ const translations: Record<
       'Date invalide',
   },
 
+
   /* ----------------------------------------------------------
      DEUTSCH
      ---------------------------------------------------------- */
@@ -610,6 +565,7 @@ const translations: Record<
     invalidDate:
       'Ungültiges Datum',
   },
+
 
   /* ----------------------------------------------------------
      日本語
@@ -722,22 +678,12 @@ const translations: Record<
 
 
 /* ============================================================
-   04. CONFIGURACIÓN DE FORMATOS DISCORD
+   04. FORMATOS DE TIMESTAMP
    ============================================================ */
 
-/*
- * Discord soporta estos siete formatos.
- *
- * Acá se configuran:
- * - nombre visible;
- * - descripción;
- * - idioma.
- *
- * La lógica real del formato está más abajo
- * en formatTimestampPreview().
- */
 const timestampFormats:
   TimestampFormat[] = [
+
     {
       code: 't',
 
@@ -884,19 +830,12 @@ const timestampFormats:
    05. UTILIDADES DE IDIOMA
    ============================================================ */
 
-/*
- * Decide qué idioma mostrar inicialmente.
- *
- * Orden:
- * 1. idioma guardado en localStorage;
- * 2. idioma del navegador;
- * 3. inglés como fallback.
- */
 function getInitialLanguage():
   Language {
+
   const savedLanguage =
     localStorage.getItem(
-      'discord-time-language',
+      'ds-time-language',
     )
 
   if (
@@ -944,14 +883,6 @@ function getInitialLanguage():
    06. UTILIDADES DE FECHA Y HORA
    ============================================================ */
 
-/*
- * Convierte Date al formato requerido por:
- *
- * <input type="datetime-local">
- *
- * Importante:
- * datetime-local no lleva timezone incluido.
- */
 function toLocalInputValue(
   date: Date,
 ) {
@@ -970,15 +901,6 @@ function toLocalInputValue(
 }
 
 
-/*
- * Genera textos como:
- *
- * EN: in 2 hours
- * ES: dentro de 2 horas
- * FR: dans 2 heures
- *
- * Se usa para el formato Discord "R".
- */
 function formatRelativeTime(
   date: Date,
   language: Language,
@@ -1055,12 +977,6 @@ function formatRelativeTime(
    07. PREVIEW DE TIMESTAMPS
    ============================================================ */
 
-/*
- * Simula cómo Discord va a mostrar cada formato.
- *
- * No genera el código <t:...>.
- * Genera solamente el texto visual.
- */
 function formatTimestampPreview(
   date: Date,
   format: TimestampCode,
@@ -1070,7 +986,7 @@ function formatTimestampPreview(
     localeMap[language]
 
   switch (format) {
-    /* Hora corta */
+
     case 't':
       return new Intl.DateTimeFormat(
         locale,
@@ -1080,7 +996,6 @@ function formatTimestampPreview(
         },
       ).format(date)
 
-    /* Hora larga */
     case 'T':
       return new Intl.DateTimeFormat(
         locale,
@@ -1091,7 +1006,6 @@ function formatTimestampPreview(
         },
       ).format(date)
 
-    /* Fecha corta */
     case 'd':
       return new Intl.DateTimeFormat(
         locale,
@@ -1102,7 +1016,6 @@ function formatTimestampPreview(
         },
       ).format(date)
 
-    /* Fecha larga */
     case 'D':
       return new Intl.DateTimeFormat(
         locale,
@@ -1113,7 +1026,6 @@ function formatTimestampPreview(
         },
       ).format(date)
 
-    /* Fecha + hora */
     case 'f':
       return new Intl.DateTimeFormat(
         locale,
@@ -1127,7 +1039,6 @@ function formatTimestampPreview(
         },
       ).format(date)
 
-    /* Día + fecha + hora */
     case 'F':
       return new Intl.DateTimeFormat(
         locale,
@@ -1143,7 +1054,6 @@ function formatTimestampPreview(
         },
       ).format(date)
 
-    /* Tiempo relativo */
     case 'R':
       return formatRelativeTime(
         date,
@@ -1154,24 +1064,11 @@ function formatTimestampPreview(
 
 
 /* ============================================================
-   08. PREVIEW DEL MENSAJE DISCORD
+   08. PREVIEW DEL MENSAJE
+   Reemplaza visualmente los timestamps por fechas legibles.
+   El texto copiado conserva el formato real de Discord.
    ============================================================ */
 
-/*
- * Busca timestamps dentro del mensaje:
- *
- * <t:123456789:F>
- *
- * y los reemplaza visualmente por:
- *
- * Monday, August 24...
- *
- * OJO:
- * esto afecta solamente la preview.
- *
- * El texto real que copiamos mantiene
- * el timestamp original de Discord.
- */
 function renderDiscordMessagePreview(
   message: string,
   language: Language,
@@ -1187,6 +1084,7 @@ function renderDiscordMessagePreview(
       unix,
       format: TimestampCode,
     ) => {
+
       const date =
         new Date(
           Number(unix) * 1000,
@@ -1209,12 +1107,9 @@ function renderDiscordMessagePreview(
 function App() {
 
   /* ----------------------------------------------------------
-     09.1 ESTADO
+     ESTADO
      ---------------------------------------------------------- */
 
-  /*
-   * Idioma actual.
-   */
   const [
     language,
     setLanguage,
@@ -1222,9 +1117,6 @@ function App() {
     getInitialLanguage,
   )
 
-  /*
-   * Fecha/hora seleccionada por el usuario.
-   */
   const [
     dateTime,
     setDateTime,
@@ -1235,12 +1127,6 @@ function App() {
       ),
   )
 
-  /*
-   * Guarda qué formato acabamos de copiar.
-   *
-   * Se usa para mostrar "Copied!"
-   * momentáneamente.
-   */
   const [
     copied,
     setCopied,
@@ -1249,32 +1135,18 @@ function App() {
       null,
     )
 
-  /*
-   * Mensaje del Message Builder.
-   */
   const [
     message,
     setMessage,
   ] =
     useState('')
 
-  /*
-   * Estado temporal del botón
-   * "Copy message".
-   */
   const [
     messageCopied,
     setMessageCopied,
   ] =
     useState(false)
 
-  /*
-   * Referencia al textarea.
-   *
-   * Nos permite saber dónde está
-   * posicionado el cursor para insertar
-   * el timestamp exactamente ahí.
-   */
   const messageRef =
     useRef<HTMLTextAreaElement>(
       null,
@@ -1282,29 +1154,12 @@ function App() {
 
 
   /* ----------------------------------------------------------
-     09.2 DATOS DERIVADOS
+     DATOS DERIVADOS
      ---------------------------------------------------------- */
 
-  /*
-   * Traducciones del idioma actual.
-   *
-   * Ejemplo:
-   * t.copy
-   * t.tomorrow
-   * t.buildMessage
-   */
   const t =
     translations[language]
 
-  /*
-   * Detecta automáticamente la timezone
-   * configurada en el navegador.
-   *
-   * Ejemplos:
-   * America/Argentina/Buenos_Aires
-   * Europe/London
-   * Asia/Tokyo
-   */
   const timezone =
     useMemo(
       () =>
@@ -1315,13 +1170,10 @@ function App() {
       [],
     )
 
-  /*
-   * Convierte el valor del input
-   * datetime-local en un Date válido.
-   */
   const selectedDate =
     useMemo(
       () => {
+
         const date =
           new Date(dateTime)
 
@@ -1339,15 +1191,10 @@ function App() {
       [dateTime],
     )
 
-  /*
-   * Convierte Date a Unix timestamp.
-   *
-   * Discord necesita segundos,
-   * no milisegundos.
-   */
   const unixTimestamp =
     useMemo(
       () => {
+
         if (
           !selectedDate
         ) {
@@ -1365,24 +1212,19 @@ function App() {
 
 
   /* ----------------------------------------------------------
-     09.3 CAMBIO DE IDIOMA
+     CAMBIO DE IDIOMA
      ---------------------------------------------------------- */
 
-  /*
-   * Cambia el idioma y lo guarda
-   * en localStorage.
-   *
-   * Así permanece después de recargar.
-   */
   const changeLanguage = (
     newLanguage: Language,
   ) => {
+
     setLanguage(
       newLanguage,
     )
 
     localStorage.setItem(
-      'discord-time-language',
+      'ds-time-language',
       newLanguage,
     )
 
@@ -1392,18 +1234,13 @@ function App() {
 
 
   /* ----------------------------------------------------------
-     09.4 ACCIONES RÁPIDAS DE TIEMPO
+     ACCIONES RÁPIDAS DE FECHA/HORA
      ---------------------------------------------------------- */
 
-  /*
-   * Se usa para:
-   * Now
-   * +15 min
-   * +1 hour
-   */
   const setQuickTime = (
     minutes: number,
   ) => {
+
     const date =
       new Date()
 
@@ -1419,12 +1256,9 @@ function App() {
     )
   }
 
-  /*
-   * Selecciona mañana
-   * manteniendo aproximadamente
-   * la hora actual.
-   */
+
   const setTomorrow = () => {
+
     const date =
       new Date()
 
@@ -1441,19 +1275,13 @@ function App() {
 
 
   /* ----------------------------------------------------------
-     09.5 COPIAR TIMESTAMPS
+     COPIAR TIMESTAMP
      ---------------------------------------------------------- */
 
-  /*
-   * Genera:
-   *
-   * <t:123456789:F>
-   *
-   * y lo copia al clipboard.
-   */
   const copyTimestamp = async (
     format: TimestampCode,
   ) => {
+
     if (
       !unixTimestamp
     ) {
@@ -1474,40 +1302,32 @@ function App() {
 
     window.setTimeout(
       () => {
+
         setCopied(
           null,
         )
-      },
 
+      },
       1400,
     )
   }
 
 
   /* ----------------------------------------------------------
-     09.6 MESSAGE BUILDER
+     MESSAGE BUILDER
      ---------------------------------------------------------- */
 
-  /*
-   * Inserta texto exactamente
-   * donde está el cursor del textarea.
-   *
-   * También reemplaza cualquier texto
-   * seleccionado.
-   */
   const insertIntoMessage = (
     value: string,
   ) => {
+
     const textarea =
       messageRef.current
 
-    /*
-     * Fallback por si la referencia
-     * todavía no está disponible.
-     */
     if (
       !textarea
     ) {
+
       setMessage(
         current =>
           current + value,
@@ -1536,13 +1356,9 @@ function App() {
       updatedMessage,
     )
 
-    /*
-     * Después del render volvemos
-     * a poner el cursor justo después
-     * del timestamp insertado.
-     */
     requestAnimationFrame(
       () => {
+
         textarea.focus()
 
         const newPosition =
@@ -1558,13 +1374,11 @@ function App() {
     )
   }
 
-  /*
-   * Genera un timestamp Discord
-   * y lo inserta dentro del mensaje.
-   */
+
   const insertTimestampIntoMessage = (
     format: TimestampCode,
   ) => {
+
     if (
       !unixTimestamp
     ) {
@@ -1576,18 +1390,11 @@ function App() {
     )
   }
 
-  /*
-   * Convierte una plantilla como:
-   *
-   * Raid at {time} — starts {relative}
-   *
-   * en:
-   *
-   * Raid at <t:123:F> — starts <t:123:R>
-   */
+
   const applyTemplate = (
     template: string,
   ) => {
+
     if (
       !unixTimestamp
     ) {
@@ -1610,14 +1417,10 @@ function App() {
     )
   }
 
-  /*
-   * Copia el mensaje completo.
-   *
-   * El mensaje conserva los timestamps
-   * reales para que Discord los renderice.
-   */
+
   const copyFullMessage =
     async () => {
+
       if (
         !message.trim()
       ) {
@@ -1635,11 +1438,12 @@ function App() {
 
       window.setTimeout(
         () => {
+
           setMessageCopied(
             false,
           )
-        },
 
+        },
         1500,
       )
     }
@@ -1653,8 +1457,7 @@ function App() {
     <main className="app-shell">
 
       {/* ======================================================
-          10.1 NAVBAR
-          Logo + idioma + GitHub
+          NAVBAR
           ====================================================== */}
 
       <header className="topbar">
@@ -1664,15 +1467,20 @@ function App() {
           href="#"
           aria-label="DS-Time home"
         >
+
+          {/* Logo de DS-Time.
+              BASE_URL permite que funcione correctamente
+              dentro de /DS-Time/ en GitHub Pages. */}
           <img
             className="brand-logo"
-            src="/ds-favicon.png"
-            alt="Discord Time"
+            src={`${import.meta.env.BASE_URL}ds-favicon.png`}
+            alt="DS-Time"
           />
 
           <span>
 
             <strong className="brand-title">
+
               <span className="brand-discord">
                 DS
               </span>
@@ -1680,6 +1488,7 @@ function App() {
               <span className="brand-time">
                 -Time
               </span>
+
             </strong>
 
             <small>
@@ -1692,7 +1501,6 @@ function App() {
 
         <nav className="topbar-actions">
 
-          {/* Selector de idioma */}
           <select
             className="language-select"
 
@@ -1710,6 +1518,7 @@ function App() {
 
             aria-label="Language"
           >
+
             <option value="en">
               English
             </option>
@@ -1729,14 +1538,15 @@ function App() {
             <option value="ja">
               日本語
             </option>
+
           </select>
 
 
-          {/* Repo público */}
+          {/* Repo actual de DS-Time */}
           <a
             className="github-link"
 
-            href="https://github.com/Linth84/Discord-Time-For-Local-Folks"
+            href="https://github.com/Linth84/DS-Time"
 
             target="_blank"
             rel="noreferrer"
@@ -1749,8 +1559,7 @@ function App() {
 
 
       {/* ======================================================
-          10.2 HERO
-          Texto principal + planeta/reloj decorativo.
+          HERO
           ====================================================== */}
 
       <section className="hero">
@@ -1772,38 +1581,42 @@ function App() {
         </p>
 
 
-        {/* Imagen decorativa de la derecha */}
+        {/* Logo grande decorativo.
+            También usa BASE_URL para GitHub Pages. */}
         <div
           className="hero-visual"
           aria-hidden="true"
         >
+
           <div className="hero-logo-glow" />
 
           <img
-            src="/ds-favicon.png"
+            src={`${import.meta.env.BASE_URL}ds-favicon.png`}
             alt=""
             className="hero-logo"
           />
+
         </div>
 
       </section>
 
 
       {/* ======================================================
-          10.3 PASOS 01 + 02
+          PASOS 01 + 02
           ====================================================== */}
 
       <section className="workspace">
 
         {/* ----------------------------------------------------
-            PASO 01
-            Elegir fecha y hora
+            PASO 01 — FECHA Y HORA
             ---------------------------------------------------- */}
 
         <div className="generator-card">
 
           <div className="section-heading">
+
             <div>
+
               <span className="step-number">
                 01
               </span>
@@ -1811,16 +1624,16 @@ function App() {
               <h2>
                 {t.chooseTime}
               </h2>
+
             </div>
 
-            {/* Timezone detectada */}
             <span className="timezone-badge">
               {timezone}
             </span>
+
           </div>
 
 
-          {/* Input principal */}
           <label className="field">
 
             <span>
@@ -1837,8 +1650,7 @@ function App() {
               onChange={
                 event =>
                   setDateTime(
-                    event.target
-                      .value,
+                    event.target.value,
                   )
               }
             />
@@ -1846,7 +1658,6 @@ function App() {
           </label>
 
 
-          {/* Accesos rápidos */}
           <div className="quick-actions">
 
             <button
@@ -1895,7 +1706,6 @@ function App() {
           </div>
 
 
-          {/* Información de timezone */}
           <div className="timezone-info">
 
             <span>
@@ -1916,13 +1726,13 @@ function App() {
 
 
         {/* ----------------------------------------------------
-            PASO 02
-            Elegir formato de timestamp
+            PASO 02 — FORMATO
             ---------------------------------------------------- */}
 
         <div className="results-card">
 
           <div className="section-heading">
+
             <div>
 
               <span className="step-number">
@@ -1934,6 +1744,7 @@ function App() {
               </h2>
 
             </div>
+
           </div>
 
 
@@ -1942,19 +1753,11 @@ function App() {
             {timestampFormats.map(
               format => {
 
-                /*
-                 * Código real que vamos
-                 * a copiar a Discord.
-                 */
                 const code =
                   unixTimestamp
                     ? `<t:${unixTimestamp}:${format.code}>`
                     : t.invalidDate
 
-                /*
-                 * Texto visual aproximado
-                 * de cómo Discord lo mostrará.
-                 */
                 const preview =
                   selectedDate
                     ? formatTimestampPreview(
@@ -1986,13 +1789,11 @@ function App() {
                     }
                   >
 
-                    {/* t / T / d / etc */}
                     <div className="format-icon">
                       {format.code}
                     </div>
 
 
-                    {/* Nombre + descripción */}
                     <div className="format-info">
 
                       <strong>
@@ -2018,14 +1819,13 @@ function App() {
                     </div>
 
 
-                    {/* Código Discord */}
                     <code>
                       {code}
                     </code>
 
 
-                    {/* Estado de copia */}
                     <span className="copy-action">
+
                       {
                         copied ===
                         format.code
@@ -2034,6 +1834,7 @@ function App() {
 
                           : t.copy
                       }
+
                     </span>
 
                   </button>
@@ -2042,19 +1843,20 @@ function App() {
             )}
 
           </div>
+
         </div>
 
       </section>
 
 
       {/* ======================================================
-          10.5 PASO 03
-          Preview simple estilo Discord.
+          PASO 03 — PREVIEW SIMPLE
           ====================================================== */}
 
       <section className="discord-preview">
 
         <div className="section-heading">
+
           <div>
 
             <span className="step-number">
@@ -2066,6 +1868,7 @@ function App() {
             </h2>
 
           </div>
+
         </div>
 
 
@@ -2079,16 +1882,20 @@ function App() {
           <div className="discord-content">
 
             <div className="discord-author">
+
               <strong>
                 Linth
               </strong>
+
             </div>
 
 
             <p>
+
               {t.discordMessage}{' '}
 
               <span className="discord-timestamp">
+
                 {
                   selectedDate
 
@@ -2100,23 +1907,26 @@ function App() {
 
                     : ''
                 }
+
               </span>
+
             </p>
 
           </div>
+
         </div>
 
       </section>
 
 
       {/* ======================================================
-          10.6 PASO 04
-          MESSAGE BUILDER
+          PASO 04 — MESSAGE BUILDER
           ====================================================== */}
 
       <section className="message-builder">
 
         <div className="section-heading">
+
           <div>
 
             <span className="step-number">
@@ -2128,6 +1938,7 @@ function App() {
             </h2>
 
           </div>
+
         </div>
 
 
@@ -2137,7 +1948,7 @@ function App() {
 
 
         {/* ----------------------------------------------------
-            Plantillas rápidas
+            PLANTILLAS
             ---------------------------------------------------- */}
 
         <div className="template-area">
@@ -2205,11 +2016,12 @@ function App() {
             </button>
 
           </div>
+
         </div>
 
 
         {/* ----------------------------------------------------
-            Campo de escritura
+            TEXTAREA
             ---------------------------------------------------- */}
 
         <textarea
@@ -2237,14 +2049,13 @@ function App() {
 
 
         {/* ----------------------------------------------------
-            Insertar timestamps + copiar mensaje
+            BOTONES DE INSERCIÓN + COPY
             ---------------------------------------------------- */}
 
         <div className="message-actions">
 
           <div className="insert-actions">
 
-            {/* Inserta formato F */}
             <button
               type="button"
 
@@ -2259,7 +2070,6 @@ function App() {
             </button>
 
 
-            {/* Inserta formato R */}
             <button
               type="button"
 
@@ -2276,7 +2086,6 @@ function App() {
           </div>
 
 
-          {/* Copia el mensaje completo */}
           <button
             className="copy-message-button"
 
@@ -2290,22 +2099,25 @@ function App() {
               !message.trim()
             }
           >
+
             {
               messageCopied
                 ? t.messageCopied
                 : t.copyMessage
             }
+
           </button>
 
         </div>
 
 
         {/* ----------------------------------------------------
-            Preview del mensaje estilo Discord
+            PREVIEW DEL MENSAJE
             ---------------------------------------------------- */}
 
         {
           message && (
+
             <div className="builder-preview">
 
               <span className="builder-preview-label">
@@ -2323,25 +2135,31 @@ function App() {
                 <div className="discord-content">
 
                   <div className="discord-author">
+
                     <strong>
                       Linth
                     </strong>
+
                   </div>
 
 
                   <p className="builder-rendered-message">
+
                     {
                       renderDiscordMessagePreview(
                         message,
                         language,
                       )
                     }
+
                   </p>
 
                 </div>
+
               </div>
 
             </div>
+
           )
         }
 
@@ -2349,7 +2167,7 @@ function App() {
 
 
       {/* ======================================================
-          10.7 FOOTER
+          FOOTER
           ====================================================== */}
 
       <footer>
