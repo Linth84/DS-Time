@@ -1662,7 +1662,7 @@ function App() {
         <a
           className="brand"
           href="#"
-          aria-label="Discord Time home"
+          aria-label="DS-Time home"
         >
           <img
             className="brand-logo"
@@ -1674,11 +1674,11 @@ function App() {
 
             <strong className="brand-title">
               <span className="brand-discord">
-                Discord
+                DS
               </span>
 
               <span className="brand-time">
-                Time
+                -Time
               </span>
             </strong>
 
@@ -2355,7 +2355,7 @@ function App() {
       <footer>
 
         <span>
-          Discord Time
+          DS-Time
         </span>
 
         <span>
