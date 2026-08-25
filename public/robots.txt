@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://linth84.github.io/DS-Time/sitemap.xml
+Sitemap: https://edgardovillalba.is-a.dev/DS-Time/sitemap.xml
