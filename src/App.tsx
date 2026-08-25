@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import './App.css'
 
 /* ============================================================
@@ -78,11 +78,13 @@ type Translation = {
   messageCopied: string
 
   templates: string
+  noneOption: string
 
   raidTemplate: string
   meetingTemplate: string
   streamTemplate: string
   eventTemplate: string
+  trainTemplate: string
 
   discordPreview: string
 
@@ -203,7 +205,7 @@ const translations: Record<
       'Raid starts at...',
 
     insertTimestamp:
-      'Insert date & time',
+      'Insert timestamp',
 
     insertRelative:
       'Insert relative time',
@@ -217,17 +219,23 @@ const translations: Record<
     templates:
       'Quick templates',
 
+    noneOption:
+      'None',
+
     raidTemplate:
-      'Raid at {time} — starts {relative}',
+      'Raid starts at ',
 
     meetingTemplate:
-      'Meeting at {time} — starts {relative}',
+      'Meeting starts at ',
 
     streamTemplate:
-      'Stream starts at {time} — {relative}',
+      'Stream starts at ',
 
     eventTemplate:
-      'Event at {time} — starts {relative}',
+      'Event starts at ',
+
+    trainTemplate:
+      'Train starts at ',
 
     discordPreview:
       'Discord preview',
@@ -312,7 +320,7 @@ const translations: Record<
       'Raid a las...',
 
     insertTimestamp:
-      'Insertar fecha y hora',
+      'Insertar timestamp',
 
     insertRelative:
       'Insertar tiempo relativo',
@@ -326,17 +334,23 @@ const translations: Record<
     templates:
       'Plantillas rápidas',
 
+    noneOption:
+      'Ninguno',
+
     raidTemplate:
-      'Raid a las {time} — empieza {relative}',
+      'Raid a las ',
 
     meetingTemplate:
-      'Reunión a las {time} — empieza {relative}',
+      'Reunión a las ',
 
     streamTemplate:
-      'El stream comienza a las {time} — {relative}',
+      'El stream comienza a las ',
 
     eventTemplate:
-      'Evento a las {time} — empieza {relative}',
+      'Evento a las ',
+
+    trainTemplate:
+      'El tren sale a las ',
 
     discordPreview:
       'Vista previa en Discord',
@@ -421,7 +435,7 @@ const translations: Record<
       'Raid à...',
 
     insertTimestamp:
-      'Insérer date et heure',
+      'Insérer un timestamp',
 
     insertRelative:
       'Insérer le temps relatif',
@@ -435,17 +449,23 @@ const translations: Record<
     templates:
       'Modèles rapides',
 
+    noneOption:
+      'Aucun',
+
     raidTemplate:
-      'Raid à {time} — commence {relative}',
+      'Raid à ',
 
     meetingTemplate:
-      'Réunion à {time} — commence {relative}',
+      'Réunion à ',
 
     streamTemplate:
-      'Le stream commence à {time} — {relative}',
+      'Le stream commence à ',
 
     eventTemplate:
-      'Événement à {time} — commence {relative}',
+      'Événement à ',
+
+    trainTemplate:
+      'Le train part à ',
 
     discordPreview:
       'Aperçu Discord',
@@ -530,7 +550,7 @@ const translations: Record<
       'Raid um...',
 
     insertTimestamp:
-      'Datum & Uhrzeit einfügen',
+      'Zeitstempel einfügen',
 
     insertRelative:
       'Relative Zeit einfügen',
@@ -544,17 +564,23 @@ const translations: Record<
     templates:
       'Schnellvorlagen',
 
+    noneOption:
+      'Keine',
+
     raidTemplate:
-      'Raid um {time} — beginnt {relative}',
+      'Raid um ',
 
     meetingTemplate:
-      'Meeting um {time} — beginnt {relative}',
+      'Meeting um ',
 
     streamTemplate:
-      'Stream beginnt um {time} — {relative}',
+      'Stream beginnt um ',
 
     eventTemplate:
-      'Event um {time} — beginnt {relative}',
+      'Event um ',
+
+    trainTemplate:
+      'Der Zug fährt um ',
 
     discordPreview:
       'Discord-Vorschau',
@@ -639,7 +665,7 @@ const translations: Record<
       'レイド開始...',
 
     insertTimestamp:
-      '日時を挿入',
+      'タイムスタンプを挿入',
 
     insertRelative:
       '相対時間を挿入',
@@ -653,17 +679,23 @@ const translations: Record<
     templates:
       'クイックテンプレート',
 
+    noneOption:
+      'なし',
+
     raidTemplate:
-      'レイドは {time} — 開始 {relative}',
+      'レイド開始 ',
 
     meetingTemplate:
-      'ミーティングは {time} — 開始 {relative}',
+      'ミーティング開始 ',
 
     streamTemplate:
-      '配信開始 {time} — {relative}',
+      '配信開始 ',
 
     eventTemplate:
-      'イベントは {time} — 開始 {relative}',
+      'イベント開始 ',
+
+    trainTemplate:
+      '電車出発 ',
 
     discordPreview:
       'Discordプレビュー',
@@ -1147,11 +1179,23 @@ function App() {
   ] =
     useState(false)
 
-  const messageRef =
-    useRef<HTMLTextAreaElement>(
-      null,
-    )
+  const [
+    selectedInsertFormat,
+    setSelectedInsertFormat,
+  ] = useState<TimestampCode>('t')
 
+  /* ----------------------------------------------------------
+     FORMATO SECUNDARIO DEL MESSAGE BUILDER
+
+     El segundo selector solo puede ser:
+     - 'R'    -> Relative Time
+     - 'none' -> no agrega segundo timestamp ni la palabra "in"
+     ---------------------------------------------------------- */
+
+  const [
+    selectedSecondaryFormat,
+    setSelectedSecondaryFormat,
+  ] = useState<'R' | 'none'>('R')
 
   /* ----------------------------------------------------------
      DATOS DERIVADOS
@@ -1317,103 +1361,69 @@ function App() {
      MESSAGE BUILDER
      ---------------------------------------------------------- */
 
-  const insertIntoMessage = (
-    value: string,
-  ) => {
-
-    const textarea =
-      messageRef.current
-
-    if (
-      !textarea
-    ) {
-
-      setMessage(
-        current =>
-          current + value,
-      )
-
-      return
-    }
-
-    const start =
-      textarea.selectionStart
-
-    const end =
-      textarea.selectionEnd
-
-    const updatedMessage =
-      message.slice(
-        0,
-        start,
-      ) +
-      value +
-      message.slice(
-        end,
-      )
-
-    setMessage(
-      updatedMessage,
-    )
-
-    requestAnimationFrame(
-      () => {
-
-        textarea.focus()
-
-        const newPosition =
-          start +
-          value.length
-
-        textarea
-          .setSelectionRange(
-            newPosition,
-            newPosition,
-          )
-      },
-    )
-  }
-
-
-  const insertTimestampIntoMessage = (
-    format: TimestampCode,
-  ) => {
-
-    if (
-      !unixTimestamp
-    ) {
-      return
-    }
-
-    insertIntoMessage(
-      `<t:${unixTimestamp}:${format}>`,
-    )
-  }
-
-
   const applyTemplate = (
     template: string,
   ) => {
 
+    setMessage(
+      template,
+    )
+  }
+
+
+  /* ----------------------------------------------------------
+     CONSTRUIR MENSAJE DESDE LOS SELECTORES
+
+     Ejemplos:
+     Train starts at <t:...:t>
+     Train starts at <t:...:t> in <t:...:R>
+
+     Si el segundo selector está en "None":
+     - no agrega Relative Time
+     - no agrega la palabra "in"
+     ---------------------------------------------------------- */
+
+  const buildTemplateMessage = () => {
+
     if (
-      !unixTimestamp
+      !unixTimestamp ||
+      !message.trim()
     ) {
       return
     }
 
-    const result =
-      template
+    /* Timestamp principal:
+       t / T / d / D / f / F / R */
+    const primary =
+      `<t:${unixTimestamp}:${selectedInsertFormat}>`
+
+    /* Quita un resultado previamente generado al final del texto.
+       Así "Apply" puede usarse varias veces sin duplicar timestamps. */
+    const cleanedBase =
+      message
         .replace(
-          '{time}',
-          `<t:${unixTimestamp}:F>`,
+          /\s*<t:\d+:[tTdDfFR]>(\s+in\s+<t:\d+:R>)?\s*$/i,
+          '',
         )
-        .replace(
-          '{relative}',
-          `<t:${unixTimestamp}:R>`,
-        )
+        .trimEnd()
+
+    /* Si el usuario eligió None, usamos solamente el timestamp principal. */
+    if (
+      selectedSecondaryFormat === 'none'
+    ) {
+      setMessage(
+        `${cleanedBase} ${primary}`,
+      )
+
+      return
+    }
+
+    /* El segundo selector solo admite Relative Time. */
+    const secondary =
+      `<t:${unixTimestamp}:R>`
 
     setMessage(
-      result,
+      `${cleanedBase} ${primary} in ${secondary}`,
     )
   }
 
@@ -2015,6 +2025,20 @@ function App() {
               Event
             </button>
 
+
+            <button
+              type="button"
+
+              onClick={
+                () =>
+                  applyTemplate(
+                    t.trainTemplate,
+                  )
+              }
+            >
+              Train
+            </button>
+
           </div>
 
         </div>
@@ -2025,8 +2049,6 @@ function App() {
             ---------------------------------------------------- */}
 
         <textarea
-          ref={messageRef}
-
           className="message-input"
 
           value={
@@ -2054,33 +2076,98 @@ function App() {
 
         <div className="message-actions">
 
-          <div className="insert-actions">
+          {/* ----------------------------------------------------
+              SELECTORES DEL MESSAGE BUILDER
 
-            <button
-              type="button"
+              Primer selector:
+              permite cualquiera de los 7 formatos de Discord.
 
-              onClick={
-                () =>
-                  insertTimestampIntoMessage(
-                    'F',
+              Segundo selector:
+              solo Relative Time o None.
+
+              Ejemplo visual:
+              Timestamp [Short Time] in [Relative Time] [Apply]
+
+              Si se elige None:
+              Timestamp [Short Time] [None] [Apply]
+              ---------------------------------------------------- */}
+
+          <div className="template-inline-builder">
+
+            <span className="template-inline-prefix">
+              Timestamp
+            </span>
+
+
+            {/* Selector principal:
+                Short Time, Long Time, Short Date, etc. */}
+            <select
+              className="template-inline-select"
+              value={selectedInsertFormat}
+              onChange={
+                event =>
+                  setSelectedInsertFormat(
+                    event.target.value as TimestampCode,
                   )
               }
+              aria-label="Primary timestamp format"
             >
-              + {t.insertTimestamp}
-            </button>
+              {timestampFormats.map(
+                format => (
+                  <option
+                    key={format.code}
+                    value={format.code}
+                  >
+                    {format.label[language]}
+                  </option>
+                ),
+              )}
+            </select>
 
 
-            <button
-              type="button"
+            {/* "in" solamente aparece cuando hay Relative Time. */}
+            {selectedSecondaryFormat !== 'none' && (
+              <span className="template-inline-connector">
+                in
+              </span>
+            )}
 
-              onClick={
-                () =>
-                  insertTimestampIntoMessage(
-                    'R',
+
+            {/* Selector secundario:
+                solamente Relative Time o None. */}
+            <select
+              className="template-inline-select"
+              value={selectedSecondaryFormat}
+              onChange={
+                event =>
+                  setSelectedSecondaryFormat(
+                    event.target.value as 'R' | 'none',
                   )
               }
+              aria-label="Secondary timestamp format"
             >
-              + {t.insertRelative}
+              <option value="R">
+                {
+                  timestampFormats.find(
+                    format =>
+                      format.code === 'R',
+                  )?.label[language]
+                }
+              </option>
+
+              <option value="none">
+                {t.noneOption}
+              </option>
+            </select>
+
+
+            {/* Aplica la selección al texto del mensaje. */}
+            <button
+              type="button"
+              className="template-inline-apply"
+              onClick={buildTemplateMessage}
+            >
+              Apply
             </button>
 
           </div>

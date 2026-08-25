@@ -1,232 +1,372 @@
 /* ============================================================
+
    DISCORD TIME
+
    App.css
 
    ÍNDICE
+
    ------------------------------------------------------------
+
    01. Base / Reset
+
    02. Layout general
+
    03. Navbar
+
    04. Marca / Logo
+
    05. Selector de idioma + GitHub
+
    06. Hero
+
    07. Hero visual / planeta-reloj
+
    08. Cards generales
+
    09. Encabezados de secciones
+
    10. Selector de fecha y hora
+
    11. Acciones rápidas
+
    12. Información de timezone
+
    13. Lista de timestamps
+
    14. Preview estilo Discord
+
    15. Message Builder
+
    16. Preview del mensaje
+
    17. Footer
+
    18. Responsive tablet
+
    19. Responsive mobile
+   20. Inline Timestamp Builder
+
    ============================================================ */
 
 
+
 /* ============================================================
+
    01. BASE / RESET
+
    ============================================================ */
 
 #root {
+
   min-height: 100vh;
+
 }
 
 * {
+
   box-sizing: border-box;
+
 }
 
 button,
+
 input,
+
 textarea,
+
 select {
+
   font: inherit;
+
 }
 
 button {
+
   border: 0;
+
 }
 
 
+
 /* ============================================================
+
    02. LAYOUT GENERAL
+
    Contenedor principal de toda la aplicación.
+
    ============================================================ */
 
 .app-shell {
+
   width: min(1180px, calc(100% - 40px));
+
   margin: 0 auto;
+
 }
 
 
+
 /* ============================================================
+
    03. NAVBAR
+
    Barra superior.
+
    ============================================================ */
 
 .topbar {
+
   min-height: 88px;
 
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
 
   border-bottom: 1px solid #242631;
+
 }
 
 .topbar-actions {
+
   display: flex;
+
   align-items: center;
+
   gap: 9px;
+
 }
 
 
+
 /* ============================================================
+
    04. MARCA / LOGO
+
    Logo superior izquierdo + nombre Discord Time.
+
    ============================================================ */
 
 .brand {
+
   display: flex;
+
   align-items: center;
+
   gap: 12px;
 
   color: inherit;
+
   text-decoration: none;
+
 }
 
 /* Imagen ds-favicon.png de la navbar */
+
 .brand-logo {
+
   width: 46px;
+
   height: 46px;
 
   flex-shrink: 0;
+
   object-fit: contain;
 
   filter:
+
     drop-shadow(
+
       0 0 10px rgba(124, 69, 255, 0.28)
+
     );
+
 }
 
 /* Contenedor del nombre + subtítulo */
+
 .brand > span:last-child {
+
   display: flex;
+
   flex-direction: column;
+
 }
 
 /* Nombre Discord Time */
+
 .brand-title {
+
   display: flex;
+
   align-items: baseline;
+
   gap: 5px;
 
   font-size: 1rem;
+
   font-weight: 900;
+
   line-height: 1;
+
   letter-spacing: -0.035em;
+
 }
 
 /* "Discord" */
+
 .brand-discord {
+
   color: #f8f8fa;
 
   text-shadow:
+
     0 1px 0 rgba(255, 255, 255, 0.08),
+
     0 4px 14px rgba(0, 0, 0, 0.28);
+
 }
 
 /* "Time" */
+
 .brand-time {
+
   color: transparent;
 
   background: linear-gradient(
+
     115deg,
+
     #b436ff 0%,
+
     #7c45ff 35%,
+
     #5965f2 65%,
+
     #4f8cff 100%
+
   );
 
   background-clip: text;
+
   -webkit-background-clip: text;
+
   -webkit-text-fill-color: transparent;
 
   filter:
+
     drop-shadow(
+
       0 0 8px rgba(124, 69, 255, 0.25)
+
     );
+
 }
 
 /* Texto pequeño debajo de Discord Time */
+
 .brand small {
+
   margin-top: 3px;
 
   color: #7d8192;
+
   font-size: 0.72rem;
+
 }
 
 
+
 /* ============================================================
+
    05. SELECTOR DE IDIOMA + LINK GITHUB
+
    ============================================================ */
 
 .language-select,
+
 .github-link {
+
   min-height: 40px;
 
   display: flex;
+
   align-items: center;
 
   padding: 0 15px;
 
   color: #c6c8d0;
+
   background: #191b23;
 
   border: 1px solid #292c37;
+
   border-radius: 10px;
 
   text-decoration: none;
+
   cursor: pointer;
 
   transition:
+
     border-color 160ms ease,
+
     background 160ms ease,
+
     color 160ms ease;
+
 }
 
 /* Espacio extra para la flecha nativa del select */
+
 .language-select {
+
   padding: 0 34px 0 13px;
 
   outline: none;
+
   color-scheme: dark;
+
 }
 
 .language-select:hover,
+
 .github-link:hover {
+
   color: #ffffff;
+
   background: #20232c;
+
   border-color: #434654;
+
 }
 
 .language-select:focus {
+
   border-color: #5865f2;
 
   box-shadow:
+
     0 0 0 3px rgba(88, 101, 242, 0.12);
+
 }
 
 
+
 /* ============================================================
+
    06. HERO
+
    Texto principal:
+
    "One time. Every timezone."
+
    ============================================================ */
 
 .hero {
+
   position: relative;
 
   min-height: 410px;
@@ -234,311 +374,469 @@ button {
   padding: 78px 0 58px;
 
   overflow: hidden;
+
 }
 
 /* Mantiene el texto por encima del elemento decorativo */
+
 .hero > .eyebrow,
+
 .hero > h1,
+
 .hero > p {
+
   position: relative;
+
   z-index: 2;
 
   /*
+
    * Reserva espacio para el planeta de la derecha.
+
    * Si querés darle más espacio al título:
+
    * subir a 64%.
+
    *
+
    * Si querés alejar todavía más texto e imagen:
+
    * bajar a 56-58%.
+
    */
+
   max-width: 62%;
+
 }
 
 /* Texto pequeño sobre el título */
+
 .eyebrow {
+
   color: #8b93ff;
 
   font-size: 0.74rem;
+
   font-weight: 800;
 
   letter-spacing: 0.16em;
+
 }
 
 /* ONE TIME */
+
 .hero h1 {
+
   margin: 18px 0 24px;
 
   font-size: clamp(3.4rem, 7vw, 6rem);
+
   font-weight: 900;
 
   line-height: 0.96;
+
   letter-spacing: -0.065em;
 
   color: transparent;
 
   background: linear-gradient(
+
     110deg,
+
     #f05cff 0%,
+
     #b74cff 30%,
+
     #8057ff 65%,
+
     #6675ff 100%
+
   );
 
   background-clip: text;
+
   -webkit-background-clip: text;
+
   -webkit-text-fill-color: transparent;
 
   filter:
+
     drop-shadow(
+
       0 0 18px rgba(151, 71, 255, 0.14)
+
     );
+
 }
 
 /* EVERY TIMEZONE */
+
 .hero h1 span {
+
   color: transparent;
 
   background: linear-gradient(
+
     110deg,
+
     #a64cff 0%,
+
     #7658ff 30%,
+
     #5865f2 58%,
+
     #3e8cff 78%,
+
     #36c9ff 100%
+
   );
 
   background-clip: text;
+
   -webkit-background-clip: text;
+
   -webkit-text-fill-color: transparent;
 
   filter:
+
     drop-shadow(
+
       0 0 20px rgba(72, 127, 255, 0.16)
+
     );
+
 }
 
 /* Descripción debajo del título */
+
 .hero p {
+
   max-width: 610px;
+
   margin: 0;
 
   color: #9ca0ad;
 
   font-size: 1.05rem;
+
   line-height: 1.65;
+
 }
 
 
+
 /* ============================================================
+
    07. HERO VISUAL
+
    Planeta/reloj grande de la derecha.
+
    Usa public/ds-favicon.png
+
    ============================================================ */
 
 .hero-visual {
+
   position: absolute;
+
   z-index: 1;
 
   top: 50%;
+
   right: 4%;
 
   width: clamp(285px, 28vw, 400px);
+
   aspect-ratio: 1;
 
   display: grid;
+
   place-items: center;
 
   transform: translateY(-50%);
 
   pointer-events: none;
+
 }
 
 /* Imagen principal */
+
 .hero-logo {
+
   position: relative;
+
   z-index: 2;
 
   width: 100%;
+
   height: 100%;
 
   object-fit: contain;
 
   filter:
+
     drop-shadow(
+
       0 0 20px rgba(88, 101, 242, 0.22)
+
     )
+
     drop-shadow(
+
       0 0 45px rgba(177, 63, 255, 0.1)
+
     );
+
 }
 
 /* Luz suave detrás del planeta */
+
 .hero-logo-glow {
+
   position: absolute;
 
   width: 72%;
+
   height: 72%;
 
   border-radius: 50%;
 
   background: radial-gradient(
+
     circle,
+
     rgba(88, 101, 242, 0.18) 0%,
+
     rgba(137, 68, 255, 0.09) 42%,
+
     transparent 72%
+
   );
 
   filter: blur(24px);
+
 }
 
 
+
 /* ============================================================
+
    08. CARDS GENERALES
+
    Cards 01, 02 y 03.
+
    ============================================================ */
 
 .workspace {
+
   display: grid;
 
   grid-template-columns:
+
     minmax(0, 0.85fr)
+
     minmax(0, 1.15fr);
 
   gap: 18px;
+
 }
 
 .generator-card,
+
 .results-card,
+
 .discord-preview,
+
 .message-builder {
+
   background: linear-gradient(
+
     145deg,
+
     rgba(29, 31, 41, 0.96),
+
     rgba(20, 22, 29, 0.96)
+
   );
 
   border: 1px solid #2b2e39;
+
   border-radius: 22px;
+
 }
 
 .generator-card,
+
 .results-card,
+
 .discord-preview,
+
 .message-builder {
+
   padding: 28px;
+
 }
 
 
+
 /* ============================================================
+
    09. ENCABEZADOS DE SECCIONES
+
    Los títulos:
+
    01 Choose your time
+
    02 Choose a format
+
    etc.
+
    ============================================================ */
 
 .section-heading {
+
   display: flex;
+
   align-items: flex-start;
+
   justify-content: space-between;
 
   gap: 18px;
 
   margin-bottom: 28px;
+
 }
 
 .section-heading > div {
+
   display: flex;
+
   align-items: center;
 
   gap: 11px;
+
 }
 
 .section-heading h2 {
+
   margin: 0;
 
   color: #f1f1f3;
 
   font-size: 1rem;
+
 }
 
 /* 01 / 02 / 03 / 04 */
+
 .step-number {
+
   font-family: monospace;
+
   font-size: 0.75rem;
+
   font-weight: 700;
 
   color: #8b70ff;
+
 }
+
 
 
 /* ============================================================
+
    10. SELECTOR DE FECHA Y HORA
+
    ============================================================ */
 
 .field {
+
   display: flex;
+
   flex-direction: column;
 
   gap: 9px;
+
 }
 
 .field > span {
+
   color: #9195a2;
 
   font-size: 0.78rem;
+
 }
 
 .field input {
+
   width: 100%;
 
   padding: 15px 16px;
 
   color: #f2f2f3;
+
   background: #11131a;
 
   border: 1px solid #30333f;
+
   border-radius: 12px;
 
   outline: none;
+
   color-scheme: dark;
 
   transition:
+
     border-color 160ms ease,
+
     box-shadow 160ms ease;
+
 }
 
 .field input:focus {
+
   border-color: #626cf3;
 
   box-shadow:
+
     0 0 0 3px rgba(88, 101, 242, 0.12);
+
 }
 
 
+
 /* ============================================================
+
    11. ACCIONES RÁPIDAS
+
    Now / +15 min / +1 hour / Tomorrow
+
    ============================================================ */
 
 .quick-actions {
+
   display: grid;
 
   grid-template-columns:
+
     repeat(4, 1fr);
 
   gap: 7px;
 
   margin-top: 10px;
+
 }
 
 .quick-actions button {
+
   padding: 9px 4px;
 
   color: #969aa7;
+
   background: #171921;
 
   border: 1px solid #292c36;
+
   border-radius: 9px;
 
   cursor: pointer;
@@ -546,28 +844,41 @@ button {
   font-size: 0.72rem;
 
   transition:
+
     color 150ms ease,
+
     border-color 150ms ease,
+
     background 150ms ease,
+
     transform 150ms ease;
+
 }
 
 .quick-actions button:hover {
+
   color: #ffffff;
+
   background: #20232d;
 
   border-color: #424654;
 
   transform: translateY(-1px);
+
 }
 
 
+
 /* ============================================================
+
    12. INFORMACIÓN DE TIMEZONE
+
    ============================================================ */
 
 /* Badge de zona horaria al lado de "Choose your time" */
+
 .timezone-badge {
+
   max-width: 210px;
 
   padding: 7px 10px;
@@ -575,78 +886,107 @@ button {
   overflow: hidden;
 
   color: #8d91a0;
+
   background: #171921;
 
   border: 1px solid #292c37;
+
   border-radius: 100px;
 
   font-size: 0.72rem;
 
   text-overflow: ellipsis;
+
   white-space: nowrap;
+
 }
 
 /* Texto explicativo inferior */
+
 .timezone-info {
+
   display: flex;
+
   flex-direction: column;
 
   gap: 6px;
 
   margin-top: 30px;
+
   padding-top: 24px;
 
   border-top: 1px solid #292c36;
+
 }
 
 .timezone-info > span {
+
   color: #767a88;
 
   font-size: 0.7rem;
 
   text-transform: uppercase;
+
   letter-spacing: 0.08em;
+
 }
 
 .timezone-info strong {
+
   color: #cacdd5;
 
   font-size: 0.84rem;
 
   word-break: break-word;
+
 }
 
 .timezone-info small {
+
   margin-top: 5px;
 
   color: #696d7b;
 
   line-height: 1.55;
+
 }
+
 
 
 /* ============================================================
+
    13. LISTA DE TIMESTAMPS
+
    Los 7 formatos Discord.
+
    ============================================================ */
 
 .timestamp-list {
+
   display: flex;
+
   flex-direction: column;
 
   gap: 7px;
+
 }
 
 .timestamp-row {
+
   width: 100%;
+
   min-width: 0;
 
   display: grid;
 
   grid-template-columns:
+
     38px
+
     minmax(130px, 1fr)
+
     minmax(180px, auto)
+
     64px;
 
   align-items: center;
@@ -656,9 +996,11 @@ button {
   padding: 11px 13px;
 
   color: inherit;
+
   background: #15171e;
 
   border: 1px solid #292c36;
+
   border-radius: 12px;
 
   text-align: left;
@@ -666,52 +1008,73 @@ button {
   cursor: pointer;
 
   transition:
+
     transform 140ms ease,
+
     background 140ms ease,
+
     border-color 140ms ease;
+
 }
 
 .timestamp-row:hover {
+
   transform: translateY(-1px);
 
   background: #1a1d25;
+
   border-color: #3a3e4b;
+
 }
 
 /* Cuadradito t / T / d / D / f / F / R */
+
 .format-icon {
+
   width: 34px;
+
   height: 34px;
 
   display: grid;
+
   place-items: center;
 
   color: #9ba2ff;
+
   background: rgba(88, 101, 242, 0.1);
 
   border-radius: 8px;
 
   font-family: monospace;
+
   font-weight: 700;
+
 }
 
 /* Nombre + descripción + preview */
+
 .format-info {
+
   min-width: 0;
 
   display: flex;
+
   flex-direction: column;
 
   gap: 3px;
+
 }
 
 .format-info strong {
+
   color: #dfe0e5;
 
   font-size: 0.8rem;
+
 }
 
 .format-info span {
+
   overflow: hidden;
 
   color: #6e7280;
@@ -719,20 +1082,27 @@ button {
   font-size: 0.68rem;
 
   text-overflow: ellipsis;
+
   white-space: nowrap;
+
 }
 
 /* Ejemplo visible del resultado */
+
 .format-preview {
+
   margin-top: 3px;
 
   color: #b8bbc5 !important;
 
   font-size: 0.73rem !important;
+
 }
 
-/* Código <t:123456:F> */
+/* Código \<t:123456:F> */
+
 .timestamp-row code {
+
   overflow: hidden;
 
   color: #a7acb9;
@@ -740,30 +1110,43 @@ button {
   font-size: 0.72rem;
 
   text-overflow: ellipsis;
+
   white-space: nowrap;
+
 }
 
 /* Copy / Copied */
+
 .copy-action {
+
   color: #8c83ff;
 
   font-size: 0.71rem;
+
   font-weight: 700;
 
   text-align: right;
+
 }
+
 
 
 /* ============================================================
+
    14. PREVIEW ESTILO DISCORD
+
    Card 03 y también utilizada dentro del Message Builder.
+
    ============================================================ */
 
 .discord-preview {
+
   margin: 18px 0 0;
+
 }
 
 .discord-message {
+
   display: flex;
 
   gap: 14px;
@@ -773,84 +1156,117 @@ button {
   background: #313338;
 
   border-radius: 12px;
+
 }
 
 /* Avatar ficticio */
+
 .discord-avatar {
+
   width: 42px;
+
   height: 42px;
 
   flex: 0 0 auto;
 
   display: grid;
+
   place-items: center;
 
   color: #ffffff;
 
   background: linear-gradient(
+
     135deg,
+
     #965cff,
+
     #5865f2
+
   );
 
   border-radius: 50%;
 
   font-weight: 800;
+
 }
 
 .discord-content {
+
   min-width: 0;
+
 }
 
 .discord-author {
+
   display: flex;
+
   align-items: baseline;
 
   gap: 7px;
+
 }
 
 .discord-author strong {
+
   color: #f2f3f5;
 
   font-size: 0.92rem;
+
 }
 
 .discord-author span {
+
   color: #949ba4;
 
   font-size: 0.67rem;
+
 }
 
 .discord-content p {
+
   margin: 4px 0 0;
 
   color: #dbdee1;
 
   font-size: 0.9rem;
+
   line-height: 1.45;
+
 }
 
 /* Apariencia de timestamp renderizado por Discord */
+
 .discord-timestamp {
+
   padding: 0 4px;
 
   color: #dbdee1;
+
   background: #404249;
 
   border-radius: 3px;
+
 }
+
 
 
 /* ============================================================
+
    15. MESSAGE BUILDER
+
    Card 04.
+
    ============================================================ */
 
 .message-builder {
+
   margin: 18px 0 60px;
+
 }
 
 .message-builder-description {
+
   max-width: 650px;
 
   margin: -12px 0 26px;
@@ -858,20 +1274,29 @@ button {
   color: #858997;
 
   font-size: 0.85rem;
+
   line-height: 1.6;
+
 }
+
 
 
 /* ------------------------------------------------------------
+
    Plantillas rápidas
+
    Raid / Meeting / Stream / Event
+
    ------------------------------------------------------------ */
 
 .template-area {
+
   margin-bottom: 16px;
+
 }
 
 .template-area > span {
+
   display: block;
 
   margin-bottom: 9px;
@@ -881,25 +1306,35 @@ button {
   font-size: 0.7rem;
 
   text-transform: uppercase;
+
   letter-spacing: 0.08em;
+
 }
 
 .template-buttons,
+
 .insert-actions {
+
   display: flex;
+
   flex-wrap: wrap;
 
   gap: 8px;
+
 }
 
 .template-buttons button,
+
 .insert-actions button {
+
   padding: 9px 13px;
 
   color: #969aa7;
+
   background: #171921;
 
   border: 1px solid #292c36;
+
   border-radius: 9px;
 
   cursor: pointer;
@@ -907,31 +1342,45 @@ button {
   font-size: 0.75rem;
 
   transition:
+
     color 150ms ease,
+
     border-color 150ms ease,
+
     background 150ms ease,
+
     transform 150ms ease;
+
 }
 
 .template-buttons button:hover,
+
 .insert-actions button:hover {
+
   color: #ffffff;
 
   background: #20232d;
+
   border-color: #514d6f;
 
   transform: translateY(-1px);
+
 }
 
 
+
 /* ------------------------------------------------------------
+
    Campo para escribir el mensaje
+
    ------------------------------------------------------------ */
 
 .message-input {
+
   display: block;
 
   width: 100%;
+
   min-height: 130px;
 
   padding: 16px;
@@ -939,9 +1388,11 @@ button {
   resize: vertical;
 
   color: #e3e5e8;
+
   background: #11131a;
 
   border: 1px solid #30333f;
+
   border-radius: 12px;
 
   outline: none;
@@ -949,38 +1400,55 @@ button {
   line-height: 1.6;
 
   transition:
+
     border-color 160ms ease,
+
     box-shadow 160ms ease;
+
 }
 
 .message-input::placeholder {
+
   color: #555a68;
+
 }
 
 .message-input:focus {
+
   border-color: #735cff;
 
   box-shadow:
+
     0 0 0 3px rgba(113, 79, 255, 0.12);
+
 }
 
 
+
 /* ------------------------------------------------------------
+
    Botones debajo del textarea
+
    ------------------------------------------------------------ */
 
 .message-actions {
+
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
 
   gap: 16px;
 
   margin-top: 12px;
+
 }
 
 /* Botón principal Copy Message */
+
 .copy-message-button {
+
   min-height: 40px;
 
   flex: 0 0 auto;
@@ -990,55 +1458,79 @@ button {
   color: #ffffff;
 
   background: linear-gradient(
+
     110deg,
+
     #9850ff,
+
     #5865f2,
+
     #428cff
+
   );
 
   border: 0;
+
   border-radius: 10px;
 
   cursor: pointer;
 
   font-size: 0.78rem;
+
   font-weight: 700;
 
   transition:
+
     transform 150ms ease,
+
     box-shadow 150ms ease,
+
     filter 150ms ease;
+
 }
 
 .copy-message-button:hover:not(:disabled) {
+
   transform: translateY(-1px);
 
   filter: brightness(1.08);
 
   box-shadow:
+
     0 8px 24px rgba(88, 101, 242, 0.2);
+
 }
 
 .copy-message-button:disabled {
+
   opacity: 0.45;
 
   cursor: not-allowed;
+
 }
+
 
 
 /* ============================================================
+
    16. PREVIEW DEL MESSAGE BUILDER
+
    Renderiza cómo se verá el mensaje en Discord.
+
    ============================================================ */
 
 .builder-preview {
+
   margin-top: 26px;
+
   padding-top: 24px;
 
   border-top: 1px solid #292c36;
+
 }
 
 .builder-preview-label {
+
   display: block;
 
   margin-bottom: 10px;
@@ -1046,31 +1538,45 @@ button {
   color: #767a88;
 
   font-size: 0.7rem;
+
   font-weight: 700;
 
   text-transform: uppercase;
+
   letter-spacing: 0.08em;
+
 }
 
 .builder-discord-message {
+
   background: #313338;
+
 }
 
 .builder-rendered-message {
+
   white-space: pre-wrap;
+
   overflow-wrap: anywhere;
+
 }
 
 
+
 /* ============================================================
+
    17. FOOTER
+
    ============================================================ */
 
 footer {
+
   min-height: 90px;
 
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
 
   color: #606471;
@@ -1078,213 +1584,500 @@ footer {
   border-top: 1px solid #242631;
 
   font-size: 0.72rem;
+
 }
 
 
+
 /* ============================================================
+
    18. RESPONSIVE — TABLET
+
    Hasta 850px.
+
    ============================================================ */
 
 @media (max-width: 850px) {
 
   /* Las cards 01 y 02 pasan a una sola columna */
+
   .workspace {
+
     grid-template-columns: 1fr;
+
   }
 
   /* Ocultamos el código porque ya no entra cómodamente */
+
   .timestamp-row {
+
     grid-template-columns:
+
       38px
+
       minmax(110px, 1fr)
+
       62px;
+
   }
 
   .timestamp-row code {
+
     display: none;
+
   }
 
   /* El planeta pasa a ser decorativo detrás del texto */
+
   .hero > .eyebrow,
+
   .hero > h1,
+
   .hero > p {
+
     max-width: 78%;
+
     z-index: 3;
+
   }
 
   .hero-visual {
+
     right: -70px;
 
     width: 315px;
 
     opacity: 0.22;
+
   }
+
 }
 
 
+
 /* ============================================================
+
    19. RESPONSIVE — MOBILE
+
    Hasta 560px.
+
    ============================================================ */
 
 @media (max-width: 560px) {
 
   /* ----------------------------------------------------------
+
      Layout general
+
      ---------------------------------------------------------- */
 
   .app-shell {
+
     width: min(
+
       calc(100% - 24px),
+
       1180px
+
     );
+
   }
 
 
+
   /* ----------------------------------------------------------
+
      Navbar
+
      ---------------------------------------------------------- */
 
   .topbar {
+
     min-height: 74px;
+
   }
 
   .brand-logo {
+
     width: 40px;
+
     height: 40px;
+
   }
 
   .brand small,
+
   .github-link {
+
     display: none;
+
   }
+
 
 
   /* ----------------------------------------------------------
+
      Hero
+
      ---------------------------------------------------------- */
 
   .hero {
+
     min-height: 340px;
 
     padding: 58px 0 42px;
+
   }
 
   .hero > .eyebrow,
+
   .hero > h1,
+
   .hero > p {
+
     max-width: 100%;
+
   }
 
   .hero h1 {
+
     font-size: clamp(
+
       3rem,
+
       15vw,
+
       4.4rem
+
     );
+
   }
 
   .hero p {
+
     max-width: 88%;
 
     font-size: 1rem;
+
   }
 
   .hero-visual {
+
     right: -115px;
+
     top: 52%;
 
     width: 270px;
 
     opacity: 0.11;
+
   }
 
 
+
   /* ----------------------------------------------------------
+
      Cards
+
      ---------------------------------------------------------- */
 
   .generator-card,
+
   .results-card,
+
   .discord-preview,
+
   .message-builder {
+
     padding: 20px;
 
     border-radius: 17px;
+
   }
 
   .section-heading {
+
     flex-direction: column;
 
     margin-bottom: 22px;
+
   }
 
 
+
   /* ----------------------------------------------------------
+
      Quick actions
+
      ---------------------------------------------------------- */
 
   .quick-actions {
+
     grid-template-columns:
+
       repeat(2, 1fr);
+
   }
 
 
+
   /* ----------------------------------------------------------
+
      Timestamp rows
+
      ---------------------------------------------------------- */
 
   .timestamp-row {
+
     grid-template-columns:
+
       34px
+
       1fr
+
       56px;
 
     gap: 10px;
+
   }
 
   .format-icon {
+
     width: 32px;
+
     height: 32px;
+
   }
 
   /* Ocultamos descripción en pantallas muy pequeñas */
+
   .format-info > span:not(.format-preview) {
+
     display: none;
+
   }
 
 
+
   /* ----------------------------------------------------------
+
      Message Builder
+
      ---------------------------------------------------------- */
 
   .message-actions {
+
     flex-direction: column;
+
     align-items: stretch;
+
   }
 
   .insert-actions {
+
     width: 100%;
+
   }
 
   .insert-actions button {
+
     flex: 1;
+
   }
 
   .copy-message-button {
+
     width: 100%;
+
   }
 
 
+
   /* ----------------------------------------------------------
+
      Footer
+
      ---------------------------------------------------------- */
 
   footer {
+
     flex-direction: column;
+
     justify-content: center;
 
     gap: 5px;
+
+  }
+
+}
+
+/* ============================================================
+   20. INLINE TIMESTAMP BUILDER
+
+   Constructor que aparece debajo del textarea del Message Builder.
+
+   Estructura visual:
+   Timestamp [formato principal] in [Relative Time] [Apply]
+
+   Si el segundo selector está en "None", App.tsx oculta "in":
+   Timestamp [formato principal] [None] [Apply]
+
+   AJUSTES RÁPIDOS:
+   - gap                  -> separación entre controles.
+   - height               -> alto de selects/botón.
+   - font-size            -> tamaño del texto.
+   - padding              -> espacio interno.
+   - border-radius        -> qué tan redondeados son.
+   - min-width            -> ancho mínimo de los selects.
+   ============================================================ */
+
+.template-inline-builder {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  flex-wrap: wrap;
+
+}
+
+/* Timestamp / in */
+
+.template-inline-prefix,
+
+.template-inline-connector {
+
+  color: #9aa6c1;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 400;
+
+}
+
+/* Selectores con aspecto de Quick Template */
+
+.template-inline-select {
+
+  height: 36px;
+
+  min-width: 0;
+
+  padding: 0 30px 0 13px;
+
+  background: #15171f;
+
+  border: 1px solid #292d3a;
+
+  border-radius: 10px;
+
+  color: #b8c2da;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 400;
+
+  cursor: pointer;
+
+  outline: none;
+
+  transition:
+
+    border-color 0.15s ease,
+
+    background-color 0.15s ease,
+
+    color 0.15s ease;
+
+}
+
+.template-inline-select:hover {
+
+  background: #181b24;
+
+  border-color: #3a4050;
+
+  color: #ffffff;
+
+}
+
+.template-inline-select:focus {
+
+  border-color: #8057ff;
+
+}
+
+/* Apply también como los Quick Templates */
+
+.template-inline-apply {
+
+  height: 36px;
+
+  padding: 0 14px;
+
+  background: #15171f;
+
+  border: 1px solid #292d3a;
+
+  border-radius: 10px;
+
+  color: #b8c2da;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 400;
+
+  cursor: pointer;
+
+  transition:
+
+    border-color 0.15s ease,
+
+    background-color 0.15s ease,
+
+    color 0.15s ease;
+
+}
+
+.template-inline-apply:hover {
+
+  background: #181b24;
+
+  border-color: #8057ff;
+
+  color: #ffffff;
+
+}
+
+/* ------------------------------------------------------------
+   INLINE BUILDER — MOBILE
+
+   En pantallas chicas ocupa todo el ancho de manera ordenada.
+   ------------------------------------------------------------ */
+@media (max-width: 560px) {
+  .template-inline-builder {
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .template-inline-prefix {
+    width: 100%;
+  }
+
+  .template-inline-select {
+    flex: 1 1 145px;
+    min-width: 0;
+  }
+
+  .template-inline-apply {
+    flex: 1 1 100%;
   }
 }
